@@ -4,9 +4,18 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
+
+type Handler struct {
+	command string
+	handler func(context Context)
+}
+
+type Context struct {
+	args     []string
+	handlers []Handler
+}
 
 func oneShot() {
 	// Uncomment this block to pass the first stage
@@ -21,15 +30,36 @@ func oneShot() {
 
 	command := args[0]
 
-	if command == "exit" {
-		c, _ := strconv.Atoi(args[1])
-		os.Exit(
-			c,
-		)
-	} else if command == "echo" {
-		fmt.Fprintf(os.Stdout, "%s\n", strings.Join(args[1:], " "))
-	} else {
-		fmt.Fprintf(os.Stdout, "%s: command not found\n", args[0])
+	handlers := []Handler{
+		{
+			command: "exit",
+			handler: Exit,
+		},
+		{
+			command: "echo",
+			handler: Echo,
+		},
+		{
+			command: "type",
+			handler: Type,
+		},
+	}
+
+	found := false
+
+	for _, h := range handlers {
+		if h.command == command {
+			h.handler(Context{
+				args:     args,
+				handlers: handlers,
+			})
+			found = true
+			break
+		}
+	}
+
+	if !found {
+		fmt.Fprintf(os.Stdout, "%s: command not found\n", command)
 	}
 }
 
