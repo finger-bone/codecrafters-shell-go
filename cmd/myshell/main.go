@@ -4,8 +4,8 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
-	"syscall"
 )
 
 type Builtin struct {
@@ -63,8 +63,16 @@ func oneShot() {
 		if _, err := os.Stat(path + "/" + command); err == nil {
 			// command found
 			// execute the program
-			// use syscall.Exec
-			syscall.Exec(path+"/"+command, args, os.Environ())
+			cmd := exec.Command(path+"/"+command, args[1:]...)
+			cmd.Env = os.Environ()
+			cmd.Stdin = os.Stdin
+			cmd.Stdout = os.Stdout
+			cmd.Stderr = os.Stderr
+			err := cmd.Run() // Run starts the specified command and waits for it to complete.
+			if err != nil {
+				// handle error
+				fmt.Println("Command finished with error: ", err)
+			}
 			return
 		}
 	}
@@ -75,7 +83,6 @@ func oneShot() {
 func main() {
 	// You can use print statements as follows for debugging, they'll be visible when running tests.
 	// fmt.Println("Logs from your program will appear here!")
-
 	for {
 		oneShot()
 	}
