@@ -19,7 +19,7 @@ func oneShot() {
 
 	args := strings.Split(input, " ")
 
-	if args[0] == "exit\n" {
+	if args[0] == "exit" {
 		c, _ := strconv.Atoi(args[1])
 		os.Exit(
 			c,
