@@ -26,6 +26,6 @@ func main() {
 	if args[0] == "exit\n" {
 		os.Exit(0)
 	} else {
-		fmt.Fprintf(os.Stdout, "%s: command not found", args[0])
+		fmt.Fprintf(os.Stdout, "%s: command not found\n", args[0])
 	}
 }
