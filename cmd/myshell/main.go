@@ -15,10 +15,10 @@ type Handler struct {
 type Context struct {
 	args     []string
 	handlers []Handler
+	paths    []string
 }
 
 func oneShot() {
-	// Uncomment this block to pass the first stage
 	fmt.Fprint(os.Stdout, "$ ")
 
 	// Read the input from the user
@@ -29,6 +29,7 @@ func oneShot() {
 	args := strings.Split(input, " ")
 
 	command := args[0]
+	paths := strings.Split(os.Getenv("PATH"), ":")
 
 	handlers := []Handler{
 		{
@@ -52,6 +53,7 @@ func oneShot() {
 			h.handler(Context{
 				args:     args,
 				handlers: handlers,
+				paths:    paths,
 			})
 			found = true
 			break

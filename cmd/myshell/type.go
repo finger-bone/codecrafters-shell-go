@@ -15,5 +15,12 @@ func Type(context Context) {
 		}
 	}
 
+	for _, path := range context.paths {
+		if _, err := os.Stat(fmt.Sprintf("%s/%s", path, command)); err == nil {
+			fmt.Fprintf(os.Stdout, "%s is %s/%s\n", command, path, command)
+			return
+		}
+	}
+
 	fmt.Fprintf(os.Stdout, "%s: not found\n", command)
 }
