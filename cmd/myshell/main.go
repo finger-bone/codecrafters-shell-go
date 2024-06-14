@@ -17,6 +17,7 @@ type Context struct {
 	args     []string
 	builtins []Builtin
 	paths    []string
+	wd       string
 }
 
 func oneShot() {
@@ -31,6 +32,7 @@ func oneShot() {
 
 	command := args[0]
 	paths := strings.Split(os.Getenv("PATH"), ":")
+	wd, _ := os.Getwd()
 
 	handlers := []Builtin{
 		{
@@ -45,6 +47,10 @@ func oneShot() {
 			command: "type",
 			handler: Type,
 		},
+		{
+			command: "pwd",
+			handler: PrintWorkingDirectory,
+		},
 	}
 
 	for _, h := range handlers {
@@ -53,6 +59,7 @@ func oneShot() {
 				args:     args,
 				builtins: handlers,
 				paths:    paths,
+				wd:       wd,
 			})
 			return
 		}
