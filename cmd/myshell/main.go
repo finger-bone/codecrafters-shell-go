@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -19,7 +20,10 @@ func oneShot() {
 	args := strings.Split(input, " ")
 
 	if args[0] == "exit\n" {
-		os.Exit(0)
+		c, _ := strconv.Atoi(args[1])
+		os.Exit(
+			c,
+		)
 	} else {
 		fmt.Fprintf(os.Stdout, "%s: command not found\n", args[0])
 	}
