@@ -61,7 +61,13 @@ func oneShot() {
 					return
 				}
 
-				err := os.Chdir(context.args[1])
+				to := strings.ReplaceAll(
+					context.args[1],
+					"~",
+					os.Getenv("HOME"),
+				)
+
+				err := os.Chdir(to)
 				if err != nil {
 					fmt.Fprintf(os.Stdout, "cd: %s: No such file or directory\n", context.args[1])
 				}
