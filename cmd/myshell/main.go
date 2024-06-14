@@ -19,11 +19,15 @@ func oneShot() {
 
 	args := strings.Split(input, " ")
 
-	if args[0] == "exit" {
+	command := args[0]
+
+	if command == "exit" {
 		c, _ := strconv.Atoi(args[1])
 		os.Exit(
 			c,
 		)
+	} else if command == "echo" {
+		fmt.Fprintf(os.Stdout, "%s\n", strings.Join(args[1:], " "))
 	} else {
 		fmt.Fprintf(os.Stdout, "%s: command not found\n", args[0])
 	}
