@@ -10,7 +10,7 @@ func Type(context Context) {
 
 	for _, h := range context.handlers {
 		if h.command == command {
-			fmt.Fprintf(os.Stdout, "%s is a shell built-in\n", command)
+			fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", command)
 			return
 		}
 	}
