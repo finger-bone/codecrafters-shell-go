@@ -5,16 +5,17 @@ import (
 	"fmt"
 	"os"
 	"strings"
+	"syscall"
 )
 
-type Handler struct {
+type Builtin struct {
 	command string
 	handler func(context Context)
 }
 
 type Context struct {
 	args     []string
-	handlers []Handler
+	builtins []Builtin
 	paths    []string
 }
 
@@ -31,7 +32,7 @@ func oneShot() {
 	command := args[0]
 	paths := strings.Split(os.Getenv("PATH"), ":")
 
-	handlers := []Handler{
+	handlers := []Builtin{
 		{
 			command: "exit",
 			handler: Exit,
@@ -46,23 +47,29 @@ func oneShot() {
 		},
 	}
 
-	found := false
-
 	for _, h := range handlers {
 		if h.command == command {
 			h.handler(Context{
 				args:     args,
-				handlers: handlers,
+				builtins: handlers,
 				paths:    paths,
 			})
-			found = true
-			break
+			return
 		}
 	}
 
-	if !found {
-		fmt.Fprintf(os.Stdout, "%s: command not found\n", command)
+	// not builtin, then try to find the command in the PATH
+	for _, path := range paths {
+		if _, err := os.Stat(path + "/" + command); err == nil {
+			// command found
+			// execute the program
+			// use syscall.Exec
+			syscall.Exec(path+"/"+command, args, os.Environ())
+			return
+		}
 	}
+
+	fmt.Fprintf(os.Stdout, "%s: command not found\n", command)
 }
 
 func main() {

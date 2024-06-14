@@ -8,7 +8,7 @@ import (
 func Type(context Context) {
 	command := context.args[1]
 
-	for _, h := range context.handlers {
+	for _, h := range context.builtins {
 		if h.command == command {
 			fmt.Fprintf(os.Stdout, "%s is a shell builtin\n", command)
 			return
