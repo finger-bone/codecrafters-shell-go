@@ -49,7 +49,23 @@ func oneShot() {
 		},
 		{
 			command: "pwd",
-			handler: PrintWorkingDirectory,
+			handler: func(context Context) {
+				fmt.Fprintf(os.Stdout, "%s\n", context.wd)
+			},
+		},
+		{
+			command: "cd",
+			handler: func(context Context) {
+				if len(context.args) != 2 {
+					fmt.Fprintf(os.Stdout, "cd: wrong number of arguments\n")
+					return
+				}
+
+				err := os.Chdir(context.args[1])
+				if err != nil {
+					fmt.Fprintf(os.Stdout, "cd: %s: No such file or directory\n", context.args[1])
+				}
+			},
 		},
 	}
 
